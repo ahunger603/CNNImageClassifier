@@ -15,24 +15,47 @@ NUM_CLASSES = CNN_input.NUM_CLASSES
 #Model Constants
 CONV_1_FILTERS = 32
 CONV_1_FILTER_SZ = 5
+CONV_1_STRIDE = 1
 
 CONV_2_FILTERS = 48
 CONV_2_FILTER_SZ = 5
+CONV_2_STRIDE = 1
+
+MP1_KSIZE = 2
+MP1_STRIDE = 2
 
 CONV_3_FILTERS = 64
 CONV_3_FILTER_SZ = 3
+CONV_3_STRIDE = 1
 
 CONV_4_FILTERS = 64
 CONV_4_FILTER_SZ = 3
+CONV_4_STRIDE = 1
+
+MP2_KSIZE = 3
+MP2_STRIDE = 2
+
+FC1_W_STDDEV = 0.04
+FC1_W_DECAY = 0.004
+FC1_BIAS_INIT = 0.1
 
 FC2_SIZE = 384
+FC2_W_STDDEV = 0.04
+FC2_W_DECAY = 0.004
+FC2_BIAS_INIT = 0.1
+
 FC3_SIZE = 192
+FC3_W_STDDEV = 1/FC3_SIZE
+FC3_W_DECAY = 0.0
+FC3_BIAS_INIT = 0.0
 
 # Training Constants
 MOVING_AVERAGE_DECAY = 0.9999
 NUM_EPOCHS_PER_DECAY = 350.0
 LEARNING_RATE_DECAY_FACTOR = 0.1
 INITIAL_LEARNING_RATE = 0.1
+NUM_BATCHES_PER_EPOCH = NUM_EXAMPLES_PER_EMPOCH_FOR_TRAIN / FLAGS.batch_size
+DECAY_STEPS = int(NUM_BATCHES_PER_EPOCH * NUM_EPOCHS_PER_DECAY)
 
 
 def _weight_variable_with_decay(name, shape, stddev, weight_decay=None):
@@ -89,32 +112,32 @@ def inference(images):
 	print("IMG SHAPE: " + str(images.get_shape()))
 
 	# Convolution Layer 1
-	conv1 = _build_convolution_layer('conv1', images, CONV_1_FILTER_SZ, IMAGE_CHANNEL_DEPTH, CONV_1_FILTERS, [1, 1, 1, 1], 'SAME')
+	conv1 = _build_convolution_layer('conv1', images, CONV_1_FILTER_SZ, IMAGE_CHANNEL_DEPTH, CONV_1_FILTERS, [1, CONV_1_STRIDE, CONV_1_STRIDE, 1], 'SAME')
 
 	print("CL1 SHAPE: " + str(conv1.get_shape()))
 
 	# Convolution Layer 2
-	conv2 = _build_convolution_layer('conv2', conv1, CONV_2_FILTER_SZ, CONV_1_FILTERS, CONV_2_FILTERS, [1, 1, 1, 1], 'SAME')
+	conv2 = _build_convolution_layer('conv2', conv1, CONV_2_FILTER_SZ, CONV_1_FILTERS, CONV_2_FILTERS, [1, CONV_2_STRIDE, CONV_2_STRIDE, 1], 'SAME')
 
 	print("CL2 SHAPE: " + str(conv2.get_shape()))
 
 	# Max Pool 1
-	max_pool1 = tf.nn.max_pool(name='pool1', value=conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+	max_pool1 = tf.nn.max_pool(name='pool1', value=conv2, ksize=[1, MP1_KSIZE, MP1_KSIZE, 1], strides=[1, MP1_STRIDE, MP1_STRIDE, 1], padding='SAME')
 
 	print("MP1 SHAPE: " + str(max_pool1.get_shape()))
 
 	# Convolution Layer 3
-	conv3 = _build_convolution_layer('conv3', max_pool1, CONV_3_FILTER_SZ, CONV_2_FILTERS, CONV_3_FILTERS, [1, 1, 1, 1], 'SAME')
+	conv3 = _build_convolution_layer('conv3', max_pool1, CONV_3_FILTER_SZ, CONV_2_FILTERS, CONV_3_FILTERS, [1, CONV_3_STRIDE, CONV_3_STRIDE, 1], 'SAME')
 
 	print("CL3 SHAPE: " + str(conv3.get_shape()))
 
 	# Convolution Layer 4
-	conv4 = _build_convolution_layer('conv4', conv3, CONV_4_FILTER_SZ, CONV_3_FILTERS, CONV_4_FILTERS, [1, 1, 1, 1], 'SAME')
+	conv4 = _build_convolution_layer('conv4', conv3, CONV_4_FILTER_SZ, CONV_3_FILTERS, CONV_4_FILTERS, [1, CONV_4_STRIDE, CONV_4_STRIDE, 1], 'SAME')
 
 	print("CL4 SHAPE: " + str(conv4.get_shape()))
 
 	# Max Pool 2
-	max_pool2 = tf.nn.max_pool(name='pool2', value=conv4, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1], padding='SAME')
+	max_pool2 = tf.nn.max_pool(name='pool2', value=conv4, ksize=[1, MP2_KSIZE, MP2_KSIZE, 1], strides=[1, MP2_STRIDE, MP2_STRIDE, 1], padding='SAME')
 	max_pool_shape = max_pool2.get_shape()
 
 	print("MP2 SHAPE: " + str(max_pool_shape))
@@ -130,12 +153,12 @@ def inference(images):
 	print("RESHAPED: " + str(reshape.get_shape()))
 
 	# Fully Connected
-	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=0.04, weight_decay=0.004, bias_init=0.1)
+	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT)
 
 	print("FC1 SHAPE: " + str(fc1.get_shape()))
 
 	# Fully Connected
-	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=0.04, weight_decay=0.004, bias_init=0.1)
+	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=FC2_W_STDDEV, weight_decay=FC2_W_DECAY, bias_init=FC2_BIAS_INIT)
 
 	print("FC2 SHAPE: " + str(fc2.get_shape()))
 
@@ -143,9 +166,9 @@ def inference(images):
 	with tf.variable_scope('softmax_linear') as scope:
 		weights = _weight_variable_with_decay('weights',
 											  [FC3_SIZE, NUM_CLASSES],
-											  stddev=1/FC3_SIZE,
-											  weight_decay=0.0)
-		biases = _bias_variable(0.0, [NUM_CLASSES])
+											  stddev=FC3_W_STDDEV,
+											  weight_decay=FC3_W_DECAY)
+		biases = _bias_variable(FC3_BIAS_INIT, [NUM_CLASSES])
 		softmax_linear = tf.add(tf.matmul(fc2, weights), biases, name=scope.name)
 		_activation_summary(softmax_linear)
 
@@ -176,12 +199,9 @@ def _add_loss_summeries(total_loss):
 
 
 def train(total_loss, global_step):
-	num_batches_per_epoch = NUM_EXAMPLES_PER_EMPOCH_FOR_TRAIN / FLAGS.batch_size
-	decay_steps = int(num_batches_per_epoch * NUM_EPOCHS_PER_DECAY)
-
 	learning_rate = tf.train.exponential_decay(INITIAL_LEARNING_RATE,
 											   global_step,
-											   decay_steps,
+											   DECAY_STEPS,
 											   LEARNING_RATE_DECAY_FACTOR,
 											   staircase=True)
 	tf.contrib.depreciated.scalar_summary('learning_rate', learning_rate)
