@@ -202,8 +202,8 @@ def _add_loss_summeries(total_loss):
 	loss_averages_op = loss_averages.apply(losses + [total_loss])
 
 	for loss in losses + [total_loss]:
-		tf.contrib.deprecated.scalar_summary(loss.op.name + ' (raw)', loss)
-		tf.contrib.deprecated.scalar_summary(loss.op.name, loss_averages.average(loss))
+		tf.summary.scalar(loss.op.name + ' (raw)', loss)
+		tf.summary.scalar(loss.op.name, loss_averages.average(loss))
 
 	return loss_averages_op
 
@@ -225,11 +225,11 @@ def train(total_loss, global_step):
 	apply_gradient_op = optimizer.apply_gradients(gradients, global_step=global_step)
 
 	for var in tf.trainable_variables():
-		tf.contrib.deprecated.histogram_summary(var.op.name, var)
+		tf.summary.histogram(var.op.name, var)
 
 	for grad, var in gradients:
 		if (grad is not None):
-			tf.contrib.deprecated.histogram_summary(var.op.name + '/gradients', grad)
+			tf.summary.histogram(var.op.name + '/gradients', grad)
 
 	variables_averages = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
 	variables_averages_op = variables_averages.apply(tf.trainable_variables())
