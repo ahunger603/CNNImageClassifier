@@ -163,6 +163,18 @@ def loss(logits, labels):
 	return tf.add_n(tf.get_collection('losses'), name='total_loss')
 
 
+def _add_loss_summeries(total_loss):
+	loss_averages = tf.train.ExponentialMovingAverage(0.9, name='avg')
+	losses = tf.get_collection('losses')
+	loss_averages_op = loss_averages.apply(losses + [total_loss])
+
+	for loss in losses + [total_loss]:
+		tf.contrib.deprecated.scalar_summary(loss.op.name + ' (raw)', loss)
+		tf.contrib.deprecated.scalar_summary(loss.op.name, loss_averages.average(loss))
+
+	return loss_averages_op
+
+
 def train(total_loss, global_step):
 	num_batches_per_epoch = NUM_EXAMPLES_PER_EMPOCH_FOR_TRAIN / FLAGS.batch_size
 	decay_steps = int(num_batches_per_epoch * NUM_EPOCHS_PER_DECAY)
@@ -174,6 +186,25 @@ def train(total_loss, global_step):
 											   staircase=True)
 	tf.contrib.depreciated.scalar_summary('learning_rate', learning_rate)
 
+	loss_averages_op = _add_loss_summeries(total_loss)
 
+	with tf.control_dependencies([loss_averages_op]):
+		optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+		gradients = optimizer.compute_gradients(total_loss)
 
-	return 0
+	apply_gradient_op = optimizer.apply_gradients(gradients, global_step=global_step)
+
+	for var in tf.trainable_variables():
+		tf.contrib.deprecated.histogram_summary(var.op.name, var)
+
+	for grad, var in gradients:
+		if (grad is not None):
+			tf.contrib.deprecated.histogram_summary(var.op.name + '/gradients', grad)
+
+	variables_averages = tf.train.ExponentialMovingAverage(MOVING_AVERAGE_DECAY, global_step)
+	variables_averages_op = variables_averages.apply(tf.trainable_variables())
+
+	with tf.control_dependencies([apply_gradient_op, variables_averages_op]):
+		train_op = tf.no_op(name='train')
+
+	return train_op
