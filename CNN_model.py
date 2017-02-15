@@ -214,7 +214,7 @@ def train(total_loss, global_step):
 											   DECAY_STEPS,
 											   LEARNING_RATE_DECAY_FACTOR,
 											   staircase=True)
-	tf.contrib.depreciated.scalar_summary('learning_rate', learning_rate)
+	tf.summary.scalar('learning_rate', learning_rate)
 
 	loss_averages_op = _add_loss_summeries(total_loss)
 
