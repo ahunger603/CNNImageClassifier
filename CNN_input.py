@@ -12,7 +12,7 @@ tf.app.flags.DEFINE_string('data_dir', 'D:\Programming\Projects\Python\PyCharmPr
 tf.app.flags.DEFINE_integer('batch_size', 128,
 							"""Number of images to process in a batch.""")
 
-tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
+tf.app.flags.DEFINE_string('train_dir', 'D:\Programming\Projects\Python\PyCharmProjects\CS410CNN\data\cifar10_train',
 							"""Directory where to write event logs """
 							"""and checkpoint.""")
 

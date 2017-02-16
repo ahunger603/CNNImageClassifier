@@ -148,12 +148,12 @@ def inference(images):
 
 	# Max Pool 2
 	max_pool2 = tf.nn.max_pool(name='pool2', value=conv4, ksize=[1, MP2_KSIZE, MP2_KSIZE, 1], strides=[1, MP2_STRIDE, MP2_STRIDE, 1], padding='SAME')
-	max_pool_shape = max_pool2.get_shape()
+	max_pool2_shape = max_pool2.get_shape()
 
-	print("MP2 SHAPE: " + str(max_pool_shape))
+	print("MP2 SHAPE: " + str(max_pool2_shape))
 
 	# Average Pool
-	avg_pool = tf.nn.avg_pool(name='avg_pool', value=max_pool2, ksize=[1, max_pool_shape[1], max_pool_shape[2], 1], strides=[1, 1, 1, 1], padding='VALID')
+	avg_pool = tf.nn.avg_pool(name='avg_pool', value=max_pool2, ksize=[1, max_pool2_shape[1], max_pool2_shape[2], 1], strides=[1, 1, 1, 1], padding='VALID')
 
 	print("AP SHAPE: " + str(avg_pool.get_shape()))
 
