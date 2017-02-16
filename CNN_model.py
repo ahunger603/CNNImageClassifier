@@ -193,6 +193,10 @@ def loss(logits, labels):
 	cross_entropy_mean = tf.reduce_mean(cross_entropy, name='cross_entropy')
 	tf.add_to_collection('losses', cross_entropy_mean)
 
+	correct_prediction = tf.equal(labels, tf.argmax(logits, 1))
+	accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+	tf.summary.scalar('accuracy', accuracy)
+
 	return tf.add_n(tf.get_collection('losses'), name='total_loss')
 
 

@@ -36,9 +36,11 @@ def train():
 			def after_run(self, run_context, run_values):
 				duration = time.time() - self._start_time
 				loss_value = run_values.results
-				if (self._step % 10 == 0):
-					return ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f sec/batch)' %
-							(datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration)))
+				if (self._step % 1 == 0):
+					log_value = '%s: step %d, loss = %.2f (%.1f examples/sec; %.3f sec/batch; %.2f est. hours to completion)' \
+								% (datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration), float(duration * FLAGS.max_steps) / (60.0 * 60.0))
+					print(log_value)
+					return (log_value)
 
 		with tf.train.MonitoredTrainingSession(
 			checkpoint_dir=FLAGS.train_dir,

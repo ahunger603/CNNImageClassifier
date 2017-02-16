@@ -3,16 +3,18 @@ import tarfile
 
 import tensorflow as tf
 
+DIRECTORY = os.path.dirname(__file__)
+
 FLAGS = tf.app.flags.FLAGS
 
 # Basic model parameters
-tf.app.flags.DEFINE_string('data_dir', 'D:\Programming\Projects\Python\PyCharmProjects\CS410CNN\data\cifar10_data',
+tf.app.flags.DEFINE_string('data_dir', str(DIRECTORY + '\data\cifar10_data'),
 						   """Path to CIFAR-10 data directory""")
 
 tf.app.flags.DEFINE_integer('batch_size', 128,
 							"""Number of images to process in a batch.""")
 
-tf.app.flags.DEFINE_string('train_dir', 'D:\Programming\Projects\Python\PyCharmProjects\CS410CNN\data\cifar10_train',
+tf.app.flags.DEFINE_string('train_dir', str(DIRECTORY + '\data\cifar10_train'),
 							"""Directory where to write event logs """
 							"""and checkpoint.""")
 
@@ -36,7 +38,7 @@ MIN_FRACTION_EXAMPLES_QUEUED = 0.4
 NUM_CLASSES = 10
 
 FILE_NAME = 'cifar-10-binary.tar.gz'
-BATCHES_BIN = 'cifar-10-batches-bin\data_batch_%d.bin'
+BATCHES_BIN = 'cifar-10-batches-bin/data_batch_%d.bin'
 
 
 # Downloads CIFAR-10 Image Data
