@@ -8,13 +8,13 @@ DIRECTORY = os.path.dirname(__file__)
 FLAGS = tf.app.flags.FLAGS
 
 # Basic model parameters
-tf.app.flags.DEFINE_string('data_dir', str(DIRECTORY + '\data\cifar10_data'),
+tf.app.flags.DEFINE_string('data_dir', os.path.join(DIRECTORY, "data", "cifar10_data"),
 						   """Path to CIFAR-10 data directory""")
 
 tf.app.flags.DEFINE_integer('batch_size', 128,
 							"""Number of images to process in a batch.""")
 
-tf.app.flags.DEFINE_string('train_dir', str(DIRECTORY + '\data\cifar10_train'),
+tf.app.flags.DEFINE_string('train_dir', os.path.join(DIRECTORY, "data", "cifar10_train"),
 							"""Directory where to write event logs """
 							"""and checkpoint.""")
 
@@ -23,6 +23,9 @@ tf.app.flags.DEFINE_integer('max_steps', 80000,
 
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
 							"""Whether to log device placement.""")
+
+tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
+							"""Whether to print shapes of network layers""")
 
 #Global Constants
 LABEL_BYTES = 1
