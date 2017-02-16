@@ -1,0 +1,2 @@
+[2/15/17] initial architecture
+[2/16/17] Learning Rate Increased 1 -> 1.5, Conv4 Filters Increased 64 -> 96, Max Pool Stride Increased 2 -> 3, Lowered Training Requirements

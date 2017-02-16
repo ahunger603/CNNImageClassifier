@@ -38,7 +38,7 @@ def train():
 				loss_value = run_values.results
 				if (self._step % 1 == 0):
 					log_value = '%s: step %d, loss = %.2f (%.1f examples/sec; %.3f sec/batch; %.2f est. hours to completion)' \
-								% (datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration), float(duration * FLAGS.max_steps) / (60.0 * 60.0))
+								% (datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration), float(duration * (FLAGS.max_steps - self._step)) / (60.0 * 60.0))
 					print(log_value)
 					return (log_value)
 

@@ -18,7 +18,7 @@ tf.app.flags.DEFINE_string('train_dir', str(DIRECTORY + '\data\cifar10_train'),
 							"""Directory where to write event logs """
 							"""and checkpoint.""")
 
-tf.app.flags.DEFINE_integer('max_steps', 1000000,
+tf.app.flags.DEFINE_integer('max_steps', 80000,
 							"""Number of batches to run.""")
 
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
@@ -31,8 +31,8 @@ IMAGE_CHANNEL_DEPTH = 3
 IMAGE_BYTES = IMAGE_SIZE * IMAGE_SIZE * IMAGE_CHANNEL_DEPTH
 RECORD_BYTES = LABEL_BYTES + IMAGE_BYTES
 
-NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 50000
-NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 10000
+NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 10000
+NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 1000
 MIN_FRACTION_EXAMPLES_QUEUED = 0.4
 
 NUM_CLASSES = 10
