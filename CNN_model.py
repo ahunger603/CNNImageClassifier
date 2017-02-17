@@ -119,8 +119,15 @@ def _build_fully_connected_layer(name, source_layer, input_size, output_size, we
 
 def _print_tensor_shapes(tensor_list):
 	if (FLAGS.report_layer_shapes):
+		max_len = 0
 		for tensor in tensor_list:
-			print(tensor.name + " shape: " + str(tensor.get_shape()))
+			name_len = len(tensor.name.split(':')[0].split('/')[0])
+			if (name_len > max_len):
+				max_len = name_len
+
+		for tensor in tensor_list:
+			name = tensor.name.split(':')[0].split('/')[0]
+			print(name + " shape: " + (" "*(max_len - len(name))) + str(tensor.get_shape()))
 	return
 
 def inference(images):
@@ -206,7 +213,7 @@ def train(total_loss, global_step):
 	loss_averages_op = _add_loss_summeries(total_loss)
 
 	with tf.control_dependencies([loss_averages_op]):
-		optimizer = tf.train.AdamOptimizer(INITIAL_LEARNING_RATE)
+		optimizer = tf.train.AdamOptimizer(learning_rate)
 		gradients = optimizer.compute_gradients(total_loss)
 
 	apply_gradient_op = optimizer.apply_gradients(gradients, global_step=global_step)
