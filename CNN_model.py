@@ -15,12 +15,12 @@ NUM_CLASSES = CNN_input.NUM_CLASSES
 # Model Constants
 
 # Convolution Layer 1
-CONV_1_FILTERS = 32
+CONV_1_FILTERS = 64
 CONV_1_FILTER_SZ = 5
-CONV_1_STRIDE = 1
+CONV_1_STRIDE = 2
 
 # Convolution Layer 2
-CONV_2_FILTERS = 48
+CONV_2_FILTERS = 64
 CONV_2_FILTER_SZ = 5
 CONV_2_STRIDE = 1
 
@@ -29,18 +29,18 @@ MP1_KSIZE = 2
 MP1_STRIDE = 2
 
 # Convolution Layer 3
-CONV_3_FILTERS = 64
+CONV_3_FILTERS = 96
 CONV_3_FILTER_SZ = 3
 CONV_3_STRIDE = 1
 
 # Convolution Layer 4
-CONV_4_FILTERS = 96
+CONV_4_FILTERS = 128
 CONV_4_FILTER_SZ = 3
 CONV_4_STRIDE = 1
 
 # Max Pool 2
-MP2_KSIZE = 3
-MP2_STRIDE = 3
+MP2_KSIZE = 2
+MP2_STRIDE = 2
 
 # Fully Connected Layer 1
 FC1_W_STDDEV = 0.04
@@ -61,9 +61,9 @@ FC3_BIAS_INIT = 0.0
 
 # Training Constants
 MOVING_AVERAGE_DECAY = 0.9999
-NUM_EPOCHS_PER_DECAY = 350.0
-LEARNING_RATE_DECAY_FACTOR = 0.1
-INITIAL_LEARNING_RATE = 0.01
+NUM_EPOCHS_PER_DECAY = 10.0
+LEARNING_RATE_DECAY_FACTOR = 0.995
+INITIAL_LEARNING_RATE = 0.15
 NUM_BATCHES_PER_EPOCH = NUM_EXAMPLES_PER_EMPOCH_FOR_TRAIN / FLAGS.batch_size
 DECAY_STEPS = int(NUM_BATCHES_PER_EPOCH * NUM_EPOCHS_PER_DECAY)
 
@@ -213,7 +213,7 @@ def train(total_loss, global_step):
 	loss_averages_op = _add_loss_summeries(total_loss)
 
 	with tf.control_dependencies([loss_averages_op]):
-		optimizer = tf.train.AdamOptimizer(learning_rate)
+		optimizer = tf.train.GradientDescentOptimizer(learning_rate)
 		gradients = optimizer.compute_gradients(total_loss)
 
 	apply_gradient_op = optimizer.apply_gradients(gradients, global_step=global_step)
