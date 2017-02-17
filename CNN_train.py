@@ -9,6 +9,8 @@ import CNN_model
 
 FLAGS = CNN_input.FLAGS
 
+LOGGING_STEP_INTERVAL = 3
+EST_TIME_SMOOTHING = 25
 
 def train():
 	with (tf.Graph().as_default()):
@@ -27,18 +29,30 @@ def train():
 
 			def begin(self):
 				self._step = -1
+				self._estimated_time_array = []
+				for i in range(EST_TIME_SMOOTHING):
+					self._estimated_time_array.append(0)
 
 			def before_run(self, run_context):
 				self._step += 1
 				self._start_time = time.time()
 				return tf.train.SessionRunArgs(loss)
 
+			def get_estimated_completion(self):
+				total = 0
+				for i in range(EST_TIME_SMOOTHING):
+					total += self._estimated_time_array[i]
+				return (total / EST_TIME_SMOOTHING)
+
 			def after_run(self, run_context, run_values):
 				duration = time.time() - self._start_time
 				loss_value = run_values.results
-				if (self._step % 1 == 0):
+
+				self._estimated_time_array[self._step % EST_TIME_SMOOTHING] = float(duration * (FLAGS.max_steps - self._step)) / (60.0 * 60.0)
+
+				if (self._step % LOGGING_STEP_INTERVAL == 0):
 					log_value = '%s: step %d, loss = %.2f (%.1f examples/sec; %.3f sec/batch; %.2f est. hours to completion)' \
-								% (datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration), float(duration * (FLAGS.max_steps - self._step)) / (60.0 * 60.0))
+								% (datetime.now(), self._step, loss_value, FLAGS.batch_size / duration, float(duration), self.get_estimated_completion())
 					print(log_value)
 					return (log_value)
 

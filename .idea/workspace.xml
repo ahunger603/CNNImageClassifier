@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e91a2a2-988b-46ae-9365-782dd3e8b754" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/ConvolutionalNeuralNet.iml" afterPath="$PROJECT_DIR$/.idea/ConvolutionalNeuralNet.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNN_input.py" afterPath="$PROJECT_DIR$/CNN_input.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNN_model.py" afterPath="$PROJECT_DIR$/CNN_model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNN_train.py" afterPath="$PROJECT_DIR$/CNN_train.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,11 +18,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CNN_input.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CNN_input.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNN_input.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
-              <caret line="105" column="52" lean-forward="true" selection-start-line="105" selection-start-column="52" selection-end-line="105" selection-end-column="52" />
+            <state relative-caret-position="1551">
+              <caret line="99" column="0" lean-forward="true" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -33,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CNN_train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CNN_train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CNN_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="41" column="36" lean-forward="false" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="36" />
+            <state relative-caret-position="646">
+              <caret line="59" column="43" lean-forward="true" selection-start-line="59" selection-start-column="43" selection-end-line="59" selection-end-column="43" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -48,8 +45,8 @@
       <file leaf-file-name="CNN_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNN_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="213" column="0" lean-forward="true" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
+            <state relative-caret-position="544">
+              <caret line="157" column="0" lean-forward="true" selection-start-line="157" selection-start-column="0" selection-end-line="157" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -76,10 +73,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/CNN_train.py" />
         <option value="$PROJECT_DIR$/ChangeLog.txt" />
-        <option value="$PROJECT_DIR$/CNN_model.py" />
         <option value="$PROJECT_DIR$/CNN_input.py" />
+        <option value="$PROJECT_DIR$/CNN_model.py" />
+        <option value="$PROJECT_DIR$/CNN_train.py" />
       </list>
     </option>
   </component>
@@ -363,7 +360,14 @@
       <option name="project" value="LOCAL" />
       <updated>1487289177352</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Full path OS independence">
+      <created>1487290112089</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1487290112089</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -396,7 +400,8 @@
     <MESSAGE value="Improved Logging and added dynamic pathing" />
     <MESSAGE value="Architecture 2" />
     <MESSAGE value="Flag based shape reporting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Flag based shape reporting" />
+    <MESSAGE value="Full path OS independence" />
+    <option name="LAST_COMMIT_MESSAGE" value="Full path OS independence" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -579,30 +584,30 @@
     <entry file="file://C:/Program Files/Python35/Lib/site-packages/tensorflow/python/lib/io/file_io.py" />
     <entry file="file://$PROJECT_DIR$/CNN_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="213" column="0" lean-forward="true" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
+        <state relative-caret-position="544">
+          <caret line="157" column="0" lean-forward="true" selection-start-line="157" selection-start-column="0" selection-end-line="157" selection-end-column="0" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CNN_train.py">
+    <entry file="file://$PROJECT_DIR$/CNN_input.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="36" lean-forward="false" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="36" />
+        <state relative-caret-position="1551">
+          <caret line="99" column="0" lean-forward="true" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CNN_input.py">
+    <entry file="file://$PROJECT_DIR$/CNN_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="105" column="52" lean-forward="true" selection-start-line="105" selection-start-column="52" selection-end-line="105" selection-end-column="52" />
+        <state relative-caret-position="646">
+          <caret line="59" column="43" lean-forward="true" selection-start-line="59" selection-start-column="43" selection-end-line="59" selection-end-column="43" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
