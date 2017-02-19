@@ -75,6 +75,7 @@ def _weight_variable_with_decay(name, shape, stddev, weight_decay=None):
 
 	if (weight_decay is not None):
 		wd = tf.multiply(tf.nn.l2_loss(tf_var), weight_decay, name='weight_loss')
+		tf.add_to_collection('losses', wd)
 
 	return tf_var
 

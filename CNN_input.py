@@ -11,12 +11,15 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('data_dir', os.path.join(DIRECTORY, "data", "cifar10_data"),
 						   """Path to CIFAR-10 data directory""")
 
-tf.app.flags.DEFINE_integer('batch_size', 128,
-							"""Number of images to process in a batch.""")
-
 tf.app.flags.DEFINE_string('train_dir', os.path.join(DIRECTORY, "data", "cifar10_train"),
 							"""Directory where to write event logs """
 							"""and checkpoint.""")
+
+tf.app.flags.DEFINE_string('eval_dir', os.path.join(DIRECTORY, "data", "cifar10_eval"),
+						   """Directory where to write event logs.""")
+
+tf.app.flags.DEFINE_integer('batch_size', 128,
+							"""Number of images to process in a batch.""")
 
 tf.app.flags.DEFINE_integer('max_steps', 80000,
 							"""Number of batches to run.""")
@@ -26,6 +29,18 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False,
 
 tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
 							"""Whether to print shapes of network layers""")
+
+tf.app.flags.DEFINE_string('eval_data', 'test',
+                           """Either 'test' or 'train_eval'.""")
+
+tf.app.flags.DEFINE_integer('eval_interval_secs', 3,
+                            """How often to run the eval.""")
+
+tf.app.flags.DEFINE_integer('num_examples', 10000,
+                            """Number of examples to run.""")
+
+tf.app.flags.DEFINE_boolean('run_once', False,
+                         """Whether to run eval only once.""")
 
 #Global Constants
 LABEL_BYTES = 1
@@ -105,7 +120,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples, batch_size
 
 def construct_inputs(is_evaluation_inputs, shuffle):
 	if (is_evaluation_inputs):
-		filenames = [os.path.join(FLAGS.data_dir, 'test_batch.bin')]
+		filenames = [os.path.join(FLAGS.data_dir, BATCHES_BIN_FOLDER, 'test_batch.bin')]
 		num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_EVAL
 	else:
 		filenames = [os.path.join(FLAGS.data_dir, BATCHES_BIN_FOLDER, (BATCH_FILE_FORMAT % i)) for i in range(1, 6)]
