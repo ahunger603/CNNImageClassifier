@@ -46,17 +46,19 @@ MP2_STRIDE = 2
 FC1_W_STDDEV = 0.04
 FC1_W_DECAY = 0.004
 FC1_BIAS_INIT = 0.1
+FC1_DROPOUT = 0.5
 
 # Fully Connected Layer 2
 FC2_SIZE = 384
 FC2_W_STDDEV = 0.04
 FC2_W_DECAY = 0.004
 FC2_BIAS_INIT = 0.1
+FC2_DROPOUT = 0.5
 
 # Fully Connected Softmax Layer 3
 FC3_SIZE = 192
 FC3_W_STDDEV = 1/FC3_SIZE
-FC3_W_DECAY = 0.0
+FC3_W_DECAY = 0.004
 FC3_BIAS_INIT = 0.0
 
 # Training Constants
@@ -96,7 +98,7 @@ def _build_convolution_layer(name, source_layer, filter_size, filter_depth, num_
 		kernel = _weight_variable_with_decay('weights',
 											 shape=[filter_size, filter_size, filter_depth, num_filters],
 											 stddev=5e-2,
-											 weight_decay=0.0)
+											 weight_decay=0.004)
 		conv = tf.nn.conv2d(source_layer, kernel, stride, padding=padding)
 		biases = _bias_variable(0.1, [num_filters])
 		pre_activation = tf.nn.bias_add(conv, biases)
@@ -106,7 +108,7 @@ def _build_convolution_layer(name, source_layer, filter_size, filter_depth, num_
 	return layer
 
 
-def _build_fully_connected_layer(name, source_layer, input_size, output_size, weight_stddev, weight_decay, bias_init):
+def _build_fully_connected_layer(name, source_layer, input_size, output_size, weight_stddev, weight_decay, bias_init, dropout):
 	with tf.variable_scope(name) as scope:
 		weights = _weight_variable_with_decay('weights',
 											  shape=[input_size, output_size],
@@ -114,6 +116,10 @@ def _build_fully_connected_layer(name, source_layer, input_size, output_size, we
 											  weight_decay=weight_decay)
 		biases = _bias_variable(bias_init, [output_size])
 		fully_con = tf.nn.relu(tf.matmul(source_layer, weights) + biases, name=name)
+
+		if dropout is not None:
+			fully_con = tf.nn.dropout(fully_con, 1 - dropout, name=name)
+
 		_activation_summary(fully_con)
 
 		return fully_con
@@ -131,7 +137,7 @@ def _print_tensor_shapes(tensor_list):
 			print(name + " shape: " + (" "*(max_len - len(name))) + str(tensor.get_shape()))
 	return
 
-def inference(images):
+def inference(is_training, images):
 	# Convolution Layer 1
 	conv1 = _build_convolution_layer('conv1', images, CONV_1_FILTER_SZ, IMAGE_CHANNEL_DEPTH, CONV_1_FILTERS, [1, CONV_1_STRIDE, CONV_1_STRIDE, 1], 'SAME')
 
@@ -157,11 +163,18 @@ def inference(images):
 	# Reshape Into Depth
 	reshape = tf.reshape(avg_pool, [FLAGS.batch_size, -1])
 
-	# Fully Connected
-	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT)
+	#Dropouts
+	if (is_training):
+		fc1_dropout = FC1_DROPOUT
+		fc2_dropout = FC2_DROPOUT
+	else:
+		fc1_dropout, fc2_dropout = None
 
 	# Fully Connected
-	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=FC2_W_STDDEV, weight_decay=FC2_W_DECAY, bias_init=FC2_BIAS_INIT)
+	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT, dropout=FC1_DROPOUT)
+
+	# Fully Connected
+	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=FC2_W_STDDEV, weight_decay=FC2_W_DECAY, bias_init=FC2_BIAS_INIT, dropout=FC2_DROPOUT)
 
 	# Softmax
 	with tf.variable_scope('softmax_linear') as scope:

@@ -18,7 +18,7 @@ def train():
 
 		images, labels = CNN_input.construct_inputs(False, True)
 
-		logits = CNN_model.inference(images)
+		logits = CNN_model.inference(True, images)
 
 		loss = CNN_model.loss(logits, labels)
 

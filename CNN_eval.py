@@ -50,11 +50,11 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
 			print(e)
 			coord.request_stop(e)
 
-def evaluate():
+def evaluate(run_once):
 	with tf.Graph().as_default() as graph:
 		images, labels = CNN_input.construct_inputs(True, False)
 
-		logits = CNN_model.inference(images)
+		logits = CNN_model.inference(False, images)
 
 		top_k_op = tf.nn.in_top_k(logits, labels, 1)
 
@@ -67,7 +67,7 @@ def evaluate():
 
 		while True:
 			eval_once(saver, summary_writer, top_k_op, summary_op)
-			if FLAGS.run_once:
+			if run_once:
 				break
 			time.sleep(FLAGS.eval_interval_secs)
 
@@ -76,7 +76,7 @@ def main(argv=None):
 	if (tf.gfile.Exists(FLAGS.eval_dir)):
 		tf.gfile.DeleteRecursively(FLAGS.eval_dir)
 	tf.gfile.MakeDirs(FLAGS.eval_dir)
-	evaluate()
+	evaluate(False)
 
 if __name__ == '__main__':
 	tf.app.run()

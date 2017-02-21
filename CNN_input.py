@@ -21,7 +21,7 @@ tf.app.flags.DEFINE_string('eval_dir', os.path.join(DIRECTORY, "data", "cifar10_
 tf.app.flags.DEFINE_integer('batch_size', 128,
 							"""Number of images to process in a batch.""")
 
-tf.app.flags.DEFINE_integer('max_steps', 80000,
+tf.app.flags.DEFINE_integer('max_steps', 100000,
 							"""Number of batches to run.""")
 
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
@@ -33,14 +33,11 @@ tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
 tf.app.flags.DEFINE_string('eval_data', 'test',
                            """Either 'test' or 'train_eval'.""")
 
-tf.app.flags.DEFINE_integer('eval_interval_secs', 3,
+tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 2,
                             """How often to run the eval.""")
 
 tf.app.flags.DEFINE_integer('num_examples', 10000,
-                            """Number of examples to run.""")
-
-tf.app.flags.DEFINE_boolean('run_once', False,
-                         """Whether to run eval only once.""")
+                            """Number of examples to run during evaluation.""")
 
 #Global Constants
 LABEL_BYTES = 1
@@ -49,7 +46,7 @@ IMAGE_CHANNEL_DEPTH = 3
 IMAGE_BYTES = IMAGE_SIZE * IMAGE_SIZE * IMAGE_CHANNEL_DEPTH
 RECORD_BYTES = LABEL_BYTES + IMAGE_BYTES
 
-NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 3000
+NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 4000
 NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 300
 MIN_FRACTION_EXAMPLES_QUEUED = 0.4
 
