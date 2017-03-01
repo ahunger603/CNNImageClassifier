@@ -37,11 +37,11 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
 
 			print(str(true_count) + ' ' + str(total_sample_count) + ' ' + str(step))
 			precision = true_count / total_sample_count
-			print('%s: precision @ 1 = %.3f' % (datetime.now(), precision))
+			print('%s: precision @ 3 = %.3f' % (datetime.now(), precision))
 
 			summary = tf.Summary()
 			summary.ParseFromString(sess.run(summary_op))
-			summary.value.add(tag='Precision @ 1', simple_value=precision)
+			summary.value.add(tag='Precision @ 3', simple_value=precision)
 			summary_writer.add_summary(summary, global_step)
 
 			coord.request_stop()
@@ -56,7 +56,7 @@ def evaluate(run_once):
 
 		logits = CNN_model.inference(False, images)
 
-		top_k_op = tf.nn.in_top_k(logits, labels, 1)
+		top_k_op = tf.nn.in_top_k(logits, labels, 3)
 
 		variable_averages = tf.train.ExponentialMovingAverage(CNN_model.MOVING_AVERAGE_DECAY)
 		variables_to_restore = variable_averages.variables_to_restore()

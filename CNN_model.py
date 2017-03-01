@@ -44,16 +44,16 @@ MP2_STRIDE = 2
 
 # Fully Connected Layer 1
 FC1_W_STDDEV = 0.04
-FC1_W_DECAY = 0.004
+FC1_W_DECAY = 0.002
 FC1_BIAS_INIT = 0.1
-FC1_DROPOUT = 0.5
+FC1_DROPOUT = 0.4
 
 # Fully Connected Layer 2
 FC2_SIZE = 384
 FC2_W_STDDEV = 0.04
-FC2_W_DECAY = 0.004
+FC2_W_DECAY = 0.002
 FC2_BIAS_INIT = 0.1
-FC2_DROPOUT = 0.5
+FC2_DROPOUT = 0.4
 
 # Fully Connected Softmax Layer 3
 FC3_SIZE = 192
@@ -63,8 +63,8 @@ FC3_BIAS_INIT = 0.0
 
 # Training Constants
 MOVING_AVERAGE_DECAY = 0.9999
-NUM_EPOCHS_PER_DECAY = 10.0
-LEARNING_RATE_DECAY_FACTOR = 0.995
+NUM_EPOCHS_PER_DECAY = 25.0
+LEARNING_RATE_DECAY_FACTOR = 0.996
 INITIAL_LEARNING_RATE = 0.15
 NUM_BATCHES_PER_EPOCH = NUM_EXAMPLES_PER_EMPOCH_FOR_TRAIN / FLAGS.batch_size
 DECAY_STEPS = int(NUM_BATCHES_PER_EPOCH * NUM_EPOCHS_PER_DECAY)
@@ -94,11 +94,11 @@ def _activation_summary(x):
 
 
 def _build_convolution_layer(name, source_layer, filter_size, filter_depth, num_filters, stride, padding):
-	with tf.variable_scope(name) as scope:
+	with tf.variable_scope(name):
 		kernel = _weight_variable_with_decay('weights',
 											 shape=[filter_size, filter_size, filter_depth, num_filters],
 											 stddev=5e-2,
-											 weight_decay=0.004)
+											 weight_decay=0.003)
 		conv = tf.nn.conv2d(source_layer, kernel, stride, padding=padding)
 		biases = _bias_variable(0.1, [num_filters])
 		pre_activation = tf.nn.bias_add(conv, biases)
@@ -168,7 +168,8 @@ def inference(is_training, images):
 		fc1_dropout = FC1_DROPOUT
 		fc2_dropout = FC2_DROPOUT
 	else:
-		fc1_dropout, fc2_dropout = None
+		fc1_dropout = None
+		fc2_dropout = None
 
 	# Fully Connected
 	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT, dropout=FC1_DROPOUT)

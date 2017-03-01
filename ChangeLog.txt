@@ -2,4 +2,6 @@
 [2/16/17] Learning Rate Increased 1 -> 1.5, Conv4 Filters Increased 64 -> 96, Max Pool Stride Increased 2 -> 3, Lowered Training Requirements
 [2/18/17] Learning Rate Exponential Decay Rate Increased, Max Pool 2 Stride/Size Decreased 3 -> 2, Conv 1 Stride increased 1 -> 2 |Decrease Computaions|
 [2/20/17] Convolutional Layers Weight Decay Increased 0 -> 0.004, Added 40% Dropout to Fully Connected Layer (1,2) |Prevent Overfitting|
-[2/20/17] Increased Dropout to 40% -> 50%, Added logic to automatically remove dropout on eval
+[2/20/17] Added logic to automatically remove dropout on eval
+[2/20/17] Decreased FC1/2 Weight Decay 0.004 -> 0.003, Increased Softmax Weight Decay 0.004 -> 0.006
+[2/26/17] Further Decreased Weight Decay 0.003 -> 0.002, Decreased Softmax Weight Decay 0.006 -> 0.004

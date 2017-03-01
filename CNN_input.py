@@ -33,7 +33,7 @@ tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
 tf.app.flags.DEFINE_string('eval_data', 'test',
                            """Either 'test' or 'train_eval'.""")
 
-tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 2,
+tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 3,
                             """How often to run the eval.""")
 
 tf.app.flags.DEFINE_integer('num_examples', 10000,
