@@ -72,7 +72,7 @@ def evaluate(run_once):
 			time.sleep(FLAGS.eval_interval_secs)
 
 def main(argv=None):
-	CNN_input.download_extract()
+	CNN_input.extract()
 	if (tf.gfile.Exists(FLAGS.eval_dir)):
 		tf.gfile.DeleteRecursively(FLAGS.eval_dir)
 	tf.gfile.MakeDirs(FLAGS.eval_dir)

@@ -172,10 +172,10 @@ def inference(is_training, images):
 		fc2_dropout = None
 
 	# Fully Connected
-	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT, dropout=FC1_DROPOUT)
+	fc1 = _build_fully_connected_layer('fc1', reshape, CONV_4_FILTERS, FC2_SIZE, weight_stddev=FC1_W_STDDEV, weight_decay=FC1_W_DECAY, bias_init=FC1_BIAS_INIT, dropout=fc1_dropout)
 
 	# Fully Connected
-	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=FC2_W_STDDEV, weight_decay=FC2_W_DECAY, bias_init=FC2_BIAS_INIT, dropout=FC2_DROPOUT)
+	fc2 = _build_fully_connected_layer('fc2', fc1, FC2_SIZE, FC3_SIZE, weight_stddev=FC2_W_STDDEV, weight_decay=FC2_W_DECAY, bias_init=FC2_BIAS_INIT, dropout=fc2_dropout)
 
 	# Softmax
 	with tf.variable_scope('softmax_linear') as scope:

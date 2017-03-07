@@ -68,7 +68,7 @@ def train():
 
 
 def main(argv=None):
-	CNN_input.download_extract()
+	CNN_input.extract()
 
 	if (tf.gfile.Exists(FLAGS.train_dir)):
 		tf.gfile.DeleteRecursively(FLAGS.train_dir)

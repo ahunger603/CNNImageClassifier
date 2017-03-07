@@ -57,8 +57,8 @@ BATCHES_BIN_FOLDER = 'cifar-10-batches-bin'
 BATCH_FILE_FORMAT = 'data_batch_%d.bin'
 
 
-# Downloads CIFAR-10 Image Data
-def download_extract():
+# Extracts CIFAR-10 Image Data
+def extract():
 	dest_directory = FLAGS.data_dir
 
 	if (os.path.exists(os.path.join(dest_directory, "cifar-10-batches-bin"))):
