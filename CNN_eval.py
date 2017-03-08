@@ -52,7 +52,7 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
 
 def evaluate(run_once):
 	with tf.Graph().as_default() as graph:
-		images, labels = CNN_input.construct_inputs(True, False)
+		images, display_images, labels = CNN_input.construct_inputs(True, False)
 
 		logits = CNN_model.inference(False, images)
 

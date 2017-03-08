@@ -27,7 +27,7 @@ tf.app.flags.DEFINE_integer('max_steps', 100000,
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
 							"""Whether to log device placement.""")
 
-tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
+tf.app.flags.DEFINE_boolean('report_layer_shapes', False,
 							"""Whether to print shapes of network layers""")
 
 tf.app.flags.DEFINE_string('eval_data', 'test',
@@ -94,25 +94,25 @@ def read_file(filename_queue):
 
 
 # Generates Batch
-def _generate_image_and_label_batch(image, label, min_queue_examples, batch_size, shuffle):
+def _generate_image_and_label_batch(image, display_image, label, min_queue_examples, batch_size, shuffle):
 	num_preprocess_threads = 16
 	if (shuffle):
-		images, label_batch = tf.train.shuffle_batch(
-			[image, label],
+		images, display_images, label_batch = tf.train.shuffle_batch(
+			[image, display_image, label],
 			batch_size=batch_size,
 			num_threads=num_preprocess_threads,
 			capacity=min_queue_examples + 3 * batch_size,
 			min_after_dequeue=min_queue_examples)
 	else:
-		images, label_batch = tf.train.batch(
-			[image, label],
+		images, display_images, label_batch = tf.train.batch(
+			[image, display_image, label],
 			batch_size=batch_size,
 			num_threads=num_preprocess_threads,
 			capacity=min_queue_examples + 3 * batch_size)
 
 	tf.summary.image('images', images)
 
-	return images, tf.reshape(label_batch, [batch_size])
+	return images, display_images, tf.reshape(label_batch, [batch_size])
 
 
 def construct_inputs(is_evaluation_inputs, shuffle):
@@ -145,7 +145,7 @@ def construct_inputs(is_evaluation_inputs, shuffle):
 
 	min_queue_examples = int(num_examples_per_epoch * MIN_FRACTION_EXAMPLES_QUEUED)
 
-	return _generate_image_and_label_batch(finalized_image,
+	return _generate_image_and_label_batch(finalized_image, float_image,
 										   label,
 										   min_queue_examples,
 										   FLAGS.batch_size,

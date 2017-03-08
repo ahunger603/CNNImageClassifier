@@ -16,7 +16,7 @@ def train():
 	with (tf.Graph().as_default()):
 		global_step = tf.contrib.framework.get_or_create_global_step()
 
-		images, labels = CNN_input.construct_inputs(False, True)
+		images, display_images, labels = CNN_input.construct_inputs(False, True)
 
 		logits = CNN_model.inference(True, images)
 
