@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import math
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import (OffsetImage, AnnotationBbox, TextArea)
 
@@ -45,6 +46,8 @@ def get_top_k(prediction, k):
 
 
 def display_result(image, label, prediction):
+	mpl.rcParams['toolbar'] = 'None'
+
 	top_k = get_top_k(prediction, DISPLAY_TOP_K)
 
 	top_k_values = []
@@ -54,6 +57,8 @@ def display_result(image, label, prediction):
 		top_k_labels.append(LABELS[top_k[i]])
 
 	fig, ax = plt.subplots()
+	fig.canvas.set_window_title('Convolutional Neural Network Display')
+	
 	bar_ind = np.arange(DISPLAY_TOP_K)
 	width = 0.2
 	bars = ax.bar(bar_ind, tuple(top_k_values), width, color='r')
@@ -63,7 +68,8 @@ def display_result(image, label, prediction):
 			bars[i].set_color('g')
 
 	ax.set_title('Image Top ' + str(DISPLAY_TOP_K) + ' Results')
-	ax.set_ylabel('Confidence')
+	ax.set_ylabel('Confidence (%)')
+	ax.set_ylim(0, 110)
 
 	ax.set_xticks(bar_ind)
 	ax.set_xticklabels(tuple(top_k_labels))
@@ -77,7 +83,7 @@ def display_result(image, label, prediction):
 
 	offsetbox = TextArea(LABELS[label], minimumdescent=False)
 
-	ab = AnnotationBbox(offsetbox, [0,0], xybox=(.75, .50), xycoords='data', boxcoords='axes fraction')
+	ab = AnnotationBbox(offsetbox, [0,0], xybox=(.75, .53), xycoords='data', boxcoords='axes fraction')
 
 	ax.add_artist(ab)
 
@@ -104,19 +110,19 @@ def main(argv=None):
 
 			coord = tf.train.Coordinator()
 			threads = []
-			#try:
-			for queue_runner in tf.get_collection(tf.GraphKeys.QUEUE_RUNNERS):
-				threads.extend(queue_runner.create_threads(sess, coord=coord, daemon=True, start=True))
+			try:
+				for queue_runner in tf.get_collection(tf.GraphKeys.QUEUE_RUNNERS):
+					threads.extend(queue_runner.create_threads(sess, coord=coord, daemon=True, start=True))
 
-			session_result = sess.run([tf.nn.softmax(logits), labels, display_images])
-			for i in range(0, FLAGS.batch_size):
-				display_result(reformat_image(session_result[2][i]), session_result[1][i], session_result[0][i])
+				session_result = sess.run([tf.nn.softmax(logits), labels, display_images])
+				for i in range(0, FLAGS.batch_size):
+					display_result(reformat_image(session_result[2][i]), session_result[1][i], session_result[0][i])
 
-			coord.request_stop()
-			coord.join(threads, stop_grace_period_secs=10)
-			#except Exception as e:
-			#	print(e.__traceback__)
-			#	coord.request_stop()
+				coord.request_stop()
+				coord.join(threads, stop_grace_period_secs=10)
+			except Exception as e:
+				print(e.__traceback__)
+				coord.request_stop()
 
 
 if __name__ == '__main__':
