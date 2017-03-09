@@ -26,45 +26,16 @@ class ResultsPlot(object):
 
 	def _initialize_plot(self):
 		self.figure.canvas.set_window_title('Convolutional Neural Network Display')
-		axprev = plt.axes([0.3, 0.01, 0.1, 0.075])
-		axnext = plt.axes([0.62, 0.01, 0.1, 0.075])
+		axprev = plt.axes([0.3, 0.02, 0.1, 0.075])
+		axnext = plt.axes([0.62, 0.02, 0.1, 0.075])
 		bnext = Button(axnext, 'Next')
 		bnext.on_clicked(self.next_image)
 		bprev = Button(axprev, 'Previous')
 		bprev.on_clicked(self.prev_image)
-		self.plot_image()
+		self._plot_result_at_index()
 		plt.show()
 
-	def plot_image(self):
-		self.axis.clear()
-
-		image = create_png_format_image(self.images[self.index])
-		label = self.labels[self.index]
-		inference = self.inferences[self.index]
-
-		top_k = get_top_k(inference, DISPLAY_TOP_K)
-
-		top_k_values = []
-		top_k_labels = []
-		for i in range(DISPLAY_TOP_K):
-			top_k_values.append(math.ceil(inference[top_k[i]] * 100))
-			top_k_labels.append(LABELS[top_k[i]])
-
-		bar_ind = np.arange(DISPLAY_TOP_K)
-		width = 0.2
-		bars = self.axis.bar(bar_ind, tuple(top_k_values), width, color='r')
-
-		for i in range(DISPLAY_TOP_K):
-			if (top_k[i] == label):
-				bars[i].set_color('g')
-
-		self.axis.set_title('Image Top ' + str(DISPLAY_TOP_K) + ' Predictions')
-		self.axis.set_ylabel('Confidence (%)')
-		self.axis.set_ylim(0, 110)
-
-		self.axis.set_xticks(bar_ind)
-		self.axis.set_xticklabels(tuple(top_k_labels))
-
+	def _plot_image(self, image, label):
 		imagebox = OffsetImage(image, zoom=2.5, interpolation='bicubic')
 		imagebox.image.axes = self.axis
 
@@ -78,18 +49,51 @@ class ResultsPlot(object):
 
 		self.axis.add_artist(ab)
 
+	def _plot_top_k_inference_bar_chart(self, inference, label):
+		top_k = get_top_k(inference, DISPLAY_TOP_K)
+
+		top_k_values = []
+		top_k_labels = []
+		for i in range(DISPLAY_TOP_K):
+			top_k_values.append(math.ceil(inference[top_k[i]] * 100))
+			top_k_labels.append(LABELS[top_k[i]])
+
+		bar_ind = np.arange(DISPLAY_TOP_K)
+		width = 0.25
+		bars = self.axis.bar(bar_ind, tuple(top_k_values), width, color='r')
+
+		for i in range(DISPLAY_TOP_K):
+			if (top_k[i] == label):
+				bars[i].set_color('g')
+
+		self.axis.set_title('Image Top ' + str(DISPLAY_TOP_K) + ' Predictions')
+		self.axis.set_ylabel('Confidence (%)')
+		self.axis.set_ylim(0, 110)
+
+		self.axis.set_xticks(bar_ind)
+		self.axis.set_xticklabels(tuple(top_k_labels))
+
+	def _plot_result_at_index(self):
+		self.axis.clear()
+
+		image = create_png_format_image(self.images[self.index])
+		label = self.labels[self.index]
+		inference = self.inferences[self.index]
+
+		self._plot_top_k_inference_bar_chart(inference, label)
+		self._plot_image(image, label)
 		plt.draw()
 
 	def next_image(self, event):
 		self.index += 1
 		self.index %= FLAGS.batch_size
-		self.plot_image()
+		self._plot_result_at_index()
 
 	def prev_image(self, event):
 		self.index -= 1
 		if (self.index < 0):
 			self.index += FLAGS.batch_size
-		self.plot_image()
+		self._plot_result_at_index()
 
 
 def create_png_format_image(image):
