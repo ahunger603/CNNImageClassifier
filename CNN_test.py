@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import math
+import os
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
@@ -26,8 +27,8 @@ class ResultsPlot(object):
 
 	def _initialize_plot(self):
 		self.figure.canvas.set_window_title('Convolutional Neural Network Display')
-		axprev = plt.axes([0.3, 0.02, 0.1, 0.075])
-		axnext = plt.axes([0.62, 0.02, 0.1, 0.075])
+		axprev = plt.axes([0.3, 0.015, 0.1, 0.075])
+		axnext = plt.axes([0.62, 0.015, 0.1, 0.075])
 		bnext = Button(axnext, 'Next')
 		bnext.on_clicked(self.next_image)
 		bprev = Button(axprev, 'Previous')
@@ -128,48 +129,6 @@ def get_top_k(prediction, k):
 	return top_k
 
 
-def display_result(image, label, prediction):
-	top_k = get_top_k(prediction, DISPLAY_TOP_K)
-
-	top_k_values = []
-	top_k_labels = []
-	for i in range(DISPLAY_TOP_K):
-		top_k_values.append(math.ceil(prediction[top_k[i]]*100))
-		top_k_labels.append(LABELS[top_k[i]])
-
-	fig, ax = plt.subplots()
-	fig.canvas.set_window_title('Convolutional Neural Network Display')
-	bar_ind = np.arange(DISPLAY_TOP_K)
-	width = 0.2
-	bars = ax.bar(bar_ind, tuple(top_k_values), width, color='r')
-
-	for i in range(DISPLAY_TOP_K):
-		if (top_k[i] == label):
-			bars[i].set_color('g')
-
-	ax.set_title('Image Top ' + str(DISPLAY_TOP_K) + ' Predictions')
-	ax.set_ylabel('Confidence (%)')
-	ax.set_ylim(0, 110)
-
-	ax.set_xticks(bar_ind)
-	ax.set_xticklabels(tuple(top_k_labels))
-
-	imagebox = OffsetImage(image, zoom=2.5, interpolation='bicubic')
-	imagebox.image.axes = ax
-
-	ab = AnnotationBbox(imagebox, [0, 0], xybox=(.75, .75), xycoords='data', boxcoords='axes fraction')
-
-	ax.add_artist(ab)
-
-	offsetbox = TextArea(LABELS[label], minimumdescent=False)
-
-	ab = AnnotationBbox(offsetbox, [0,0], xybox=(.75, .53), xycoords='data', boxcoords='axes fraction')
-
-	ax.add_artist(ab)
-
-	plt.show()
-
-
 def main(argv=None):
 	CNN_input.extract()
 
@@ -183,7 +142,7 @@ def main(argv=None):
 	with tf.Session() as sess:
 		check_point = tf.train.get_checkpoint_state(FLAGS.train_dir)
 		if check_point and check_point.model_checkpoint_path:
-			saver.restore(sess, check_point.model_checkpoint_path.replace("E:\\", "D:\\"))
+			saver.restore(sess, os.path.join(FLAGS.train_dir, list(reversed(check_point.model_checkpoint_path.split(os.sep, -1)))[0]))
 		else:
 			raise IOError("No Checkpoint file found!")
 
@@ -196,8 +155,6 @@ def main(argv=None):
 			session_result = sess.run([tf.nn.softmax(logits), labels, display_images])
 
 			ResultsPlot(session_result[2], session_result[1], session_result[0])
-			# for i in range(0, FLAGS.batch_size):
-			# 	display_result(reformat_image(session_result[2][i]), session_result[1][i], session_result[0][i])
 
 			coord.request_stop()
 			coord.join(threads, stop_grace_period_secs=10)

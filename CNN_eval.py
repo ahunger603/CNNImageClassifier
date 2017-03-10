@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import math
 import time
+import os
 from datetime import datetime
 
 import CNN_input
@@ -13,7 +14,7 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
 	with tf.Session() as sess:
 		check_point = tf.train.get_checkpoint_state(FLAGS.train_dir)
 		if check_point and check_point.model_checkpoint_path:
-			saver.restore(sess, check_point.model_checkpoint_path)
+			saver.restore(sess, os.path.join(FLAGS.train_dir, list(reversed(check_point.model_checkpoint_path.split(os.sep, -1)))[0]))
 			global_step = check_point.model_checkpoint_path.split('/')[-1].split('-')[-1]
 		else:
 			raise ValueError("No checkpoint file found")
