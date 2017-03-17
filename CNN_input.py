@@ -27,7 +27,7 @@ tf.app.flags.DEFINE_integer('max_steps', 100000,
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
 							"""Whether to log device placement.""")
 
-tf.app.flags.DEFINE_boolean('report_layer_shapes', False,
+tf.app.flags.DEFINE_boolean('report_layer_shapes', True,
 							"""Whether to print shapes of network layers""")
 
 tf.app.flags.DEFINE_string('eval_data', 'test',

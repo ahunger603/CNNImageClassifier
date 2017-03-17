@@ -142,7 +142,7 @@ def main(argv=None):
 	with tf.Session() as sess:
 		check_point = tf.train.get_checkpoint_state(FLAGS.train_dir)
 		if check_point and check_point.model_checkpoint_path:
-			saver.restore(sess, os.path.join(FLAGS.train_dir, list(reversed(check_point.model_checkpoint_path.split(os.sep, -1)))[0]))
+			saver.restore(sess, os.path.join(FLAGS.train_dir, list(reversed(check_point.model_checkpoint_path.split('\\', -1)))[0]))
 		else:
 			raise IOError("No Checkpoint file found!")
 

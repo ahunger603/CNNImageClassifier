@@ -1,0 +1,6 @@
+model_checkpoint_path: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-68903"
+all_model_checkpoint_paths: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-64615"
+all_model_checkpoint_paths: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-65689"
+all_model_checkpoint_paths: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-66769"
+all_model_checkpoint_paths: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-67849"
+all_model_checkpoint_paths: "E:\\Programming\\Projects\\Python\\PyCharmProjects\\ConvolutionalNeuralNet\\data\\cifar10_train\\model.ckpt-68903"
